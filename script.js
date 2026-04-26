@@ -17,7 +17,8 @@ function createTaskListElement(taskText, isCompleted) {
     label.innerHTML = `
         <input type="checkbox" ${isCompleted ? 'checked' : ''} >
         <span class="task-checkmark"></span>
-        <span class="task-text" contenteditable="true" spellcheck="false" onclick="">${taskText} </span>
+        <span class="task-text" contenteditable="true" spellcheck="false" onclick="">${taskText}</span>
+        <button class="task-edit-btn" title="Редагувати завдання">✏️</button>
         <button class="task-done-btn" title="Змінити відмітку виконання завдання">✔</button>                
         <button class="task-task-delete-btn" title="Видалити завдання">✖</button>
     `;
@@ -30,6 +31,13 @@ function createTaskListElement(taskText, isCompleted) {
         if (textSpan.innerText.trim() === "") {
             textSpan.innerText = "Введіть нове завдання"; // Запобігаємо зникненню елемента
         }
+        // Відновлюємо стан кнопки редагування
+        const isEditing = label.classList.contains('editing');
+        if (isEditing) {
+            label.classList.remove('editing');
+            taskEditBtn.innerText = '✏️';
+            taskEditBtn.title = "Редагувати завдання";
+         }
         saveTaskList();
     });
 
@@ -38,7 +46,8 @@ function createTaskListElement(taskText, isCompleted) {
     textSpan.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault(); // Запобігаємо перенесенню рядка
-            textSpan.blur(); // Викликаємо подію blur для збереження
+            textSpan.blur();    // Викликаємо подію blur для збереження
+           
         }
     });
 
@@ -54,6 +63,18 @@ function createTaskListElement(taskText, isCompleted) {
     //});
 
 
+    // Змінюємо відображення кнопки для редагування під час редагування
+    textSpan.addEventListener('focus', (e) => {
+        e.preventDefault();
+        const isEditing = label.classList.contains('editing');
+        if (!isEditing) {
+            label.classList.add('editing');
+            taskEditBtn.innerText = '💾';
+            taskEditBtn.title = 'Завершіть редагування завдання натисненням клавіши "Enter"';
+        }
+    });
+
+
     // Подія для чекбокса: зберігаємо стан (виконано/не виконано)
     const checkbox = label.querySelector('input');
     checkbox.addEventListener('change', () => {
@@ -61,7 +82,7 @@ function createTaskListElement(taskText, isCompleted) {
     });
 
 
-    // Подія для видалення
+    // Подія для кнопки видалення завдання
     const taskDeleteBtn = label.querySelector('.task-task-delete-btn');
     taskDeleteBtn.addEventListener('click', (e) => {
         e.preventDefault(); // Запобігаємо спрацюванню label
@@ -70,16 +91,16 @@ function createTaskListElement(taskText, isCompleted) {
     });
 
 
-    // Подія для виконання завдання
+    // Подія для кнопки зміни стану виконання завдання
     const taskDoneBtn = label.querySelector('.task-done-btn');
     taskDoneBtn.addEventListener('click', (e) => {
         e.preventDefault(); // Запобігаємо спрацюванню label
         checkbox.checked = !checkbox.checked;
-        saveTaskList();
+        saveTaskList(); // Зберігаємо після зміни стану
     });
 
 
-     // Подія для редагування та збереження завдання
+     // Подія для кнопки редагування та збереження завдання
     const taskEditBtn = label.querySelector('.task-edit-btn');
     taskEditBtn.addEventListener('click', (e) => {
         e.preventDefault(); // Запобігаємо спрацюванню label
@@ -97,7 +118,7 @@ function createTaskListElement(taskText, isCompleted) {
 }
 
 
-//Функція збереження всіх завдань у LocalStorage
+//Функція для збереження всіх завдань у LocalStorage
 function saveTaskList() {
     const myTaskList = [];
     document.querySelectorAll('.task-list-item').forEach(item => {
@@ -111,7 +132,7 @@ function saveTaskList() {
 }
 
 
-// Функція завантаження списку завдань з LocalStorage
+// Функція для завантаження списку завдань з LocalStorage
 function loadTaskList() {
     // Видаляємо зі списку завдань всі статичні завдання
     staticTaskList = document.querySelectorAll('.task-list-item');
@@ -120,7 +141,7 @@ function loadTaskList() {
     });
 
 
-    // Додаємр у список завдань всі завдання з LocalStorage
+    // Додаємо у список завдань всі завдання з LocalStorage
     const savedTaskList = localStorage.getItem('myTaskList');
     if (savedTaskList) {
         const myTaskList = JSON.parse(savedTaskList);
@@ -181,6 +202,25 @@ function attachTaskListEvents(label) {
         checkbox.checked = !checkbox.checked;
         saveTaskList();
     };
+
+
+    // Подія для редагування та збереження завдання
+    const taskEditBtn = label.querySelector('.task-edit-btn');
+    taskEditBtn.onclick = () => {
+        textSpan.focus();
+    };
+
+
+    textSpan.focus = () => {
+        const isEditing = label.classList.contains('editing');
+        if (isEditing) {
+            taskEditBtn.innerText = '✏️';
+            label.classList.remove('editing');
+        } else {
+            taskEditBtn.innerText = '💾';
+            label.classList.add('editing');
+        }
+    };  
 }
 
 
