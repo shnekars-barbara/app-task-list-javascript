@@ -117,6 +117,18 @@ function createTaskListElement(taskText, isCompleted) {
     taskList.appendChild(label);
 }
 
+function addTask() {
+    const taskText = taskInput.value.trim();
+
+    if (taskText === "") return;
+
+    createTaskListElement(taskText, false);
+    saveTaskList();
+
+    taskInput.value = "";
+    taskInput.focus();
+}
+
 
 //Функція для збереження всіх завдань у LocalStorage
 function saveTaskList() {
