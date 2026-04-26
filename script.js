@@ -20,7 +20,7 @@ function createTaskListElement(taskText, isCompleted) {
         <span class="task-text" contenteditable="true" spellcheck="false" onclick="">${taskText}</span>
         <button class="task-edit-btn" title="Редагувати завдання">✏️</button>
         <button class="task-done-btn" title="Змінити відмітку виконання завдання">✔</button>                
-        <button class="task-task-delete-btn" title="Видалити завдання">✖</button>
+        <button class="task-delete-btn" title="Видалити завдання">✖</button>
     `;
 
 
@@ -83,7 +83,7 @@ function createTaskListElement(taskText, isCompleted) {
 
 
     // Подія для кнопки видалення завдання
-    const taskDeleteBtn = label.querySelector('.task-task-delete-btn');
+    const taskDeleteBtn = label.querySelector('.task-delete-btn');
     taskDeleteBtn.addEventListener('click', (e) => {
         e.preventDefault(); // Запобігаємо спрацюванню label
         label.remove();
@@ -188,7 +188,7 @@ function attachTaskListEvents(label) {
 
 
     // Подія для видалення завдання
-    const taskDeleteBtn = label.querySelector('.task-task-delete-btn');
+    const taskDeleteBtn = label.querySelector('.task-delete-btn');
     taskDeleteBtn.addEventListener('click', (e) => {
         e.preventDefault(); // Запобігаємо спрацюванню label
         label.remove();
