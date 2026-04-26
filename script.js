@@ -28,6 +28,7 @@ function addTask() {
 // із можливістю редагувати завдання у списку, так і для
 // відтворення збереженого списку завдань з LocalStorage
 function createTaskListElement(taskText, isCompleted) {
+    
     // Створюємо елемент завдання (контейнер label)
     const label = document.createElement('label');
     label.className = 'task-list-item';
@@ -74,6 +75,13 @@ const taskDeleteBtn = label.querySelector('.task-delete-btn');
         label.remove(); // Видаляємо завдання
         saveTaskList(); // Зберігаємо список завдань після видалення
     });
+
+    // Запобігаємо спрацюванню події для label 
+// при кліку на тексті завданні
+textSpan.addEventListener('click', (e) => {
+    e.preventDefault();
+});
+
  
     taskList.appendChild(label);
 }
@@ -156,6 +164,12 @@ const taskDeleteBtn = label.querySelector('.task-delete-btn');
         label.remove(); // Видаляємо завдання
         saveTaskList(); // Зберігаємо список завдань після видалення
     });
+    // Запобігаємо спрацюванню події для label 
+// при кліку на тексті завданні
+textSpan.addEventListener('click', (e) => {
+    e.preventDefault();
+});
+
 }
 
  
